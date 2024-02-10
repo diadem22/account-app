@@ -1,14 +1,8 @@
-import { config as _config } from 'dotenv';
-import { Sequelize } from 'sequelize';
+import dotenv from 'dotenv';
+import { Pool } from 'pg';
 
+dotenv.config();
 // Load environment variables from .env file
-const envFound = _config({
-  path: `./.env${process.env.APP_ENV ? `.${process.env.APP_ENV}` : ''}`,
-});
-
-if (envFound.error) {
-  throw new Error('Ooops! Seems like you have not created a .env file');
-}
 
 const {
   DATABASE_URI,
@@ -20,28 +14,13 @@ const {
   DATABASE_PASSWORD,
 } = process.env;
 
-const sequelizeConnection = new Sequelize({
-  dialect: 'postgres',
-  host: DATABASE_HOST || '',
-  port: Number(DATABASE_PORT) || 0,
-  database: DATABASE_NAME || '',
-  username: DATABASE_USERNAME || '',
-  password: DATABASE_PASSWORD || '',
+const itemsPool = new Pool({
+  connectionString: DATABASE_URI,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
-// Test the database connection
-sequelizeConnection
-  .authenticate()
-  .then(() => {
-    console.log(
-      'Connection to the database has been established successfully.',
-    );
-  })
-  .catch((error: Error) => {
-    console.error('Unable to connect to the database:', error);
-  });
-
-// Export config and sequelize together
 export default {
   config: {
     database: {
@@ -58,5 +37,5 @@ export default {
       userB: 'userB',
     },
   },
-  sequelizeConnection,
+  itemsPool,
 };
