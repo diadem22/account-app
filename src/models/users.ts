@@ -25,6 +25,6 @@ export class User extends Model<User> {
   @Column({ allowNull: false, field: 'createdat', defaultValue: DataType.NOW })
   createdat: Date;
 
-  @Column({ allowNull: false, field: 'createdat', defaultValue: DataType.NOW })
+  @Column({ allowNull: false, field: 'updatedat', defaultValue: DataType.NOW })
   updatedat: Date;
 }
