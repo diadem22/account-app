@@ -5,16 +5,9 @@ import { initializeApp } from 'firebase/app';
 import firebase_admin from 'firebase-admin';
 import dotenv from 'dotenv';
 import express from 'express';
-// import { UserController } from './users/users.controller';
-// import { AccountController } from './account/account.controller';
-// import firebase from 'firebase';
-
-// import credentials from './auth/service_account.json';
 dotenv.config();
-// import runMigrations from 'node-pg-migrate';
 
 async function bootstrap() {
-  // Connect to the database
   try {
     await itemsPool.itemsPool.connect();
     console.log('Database connection has been established successfully.');
@@ -39,16 +32,7 @@ async function bootstrap() {
     measurementId: process.env.FIREBASE_MEASUREMENT_ID,
   };
 
-  // Initialize Firebase
   initializeApp(firebaseConfig);
-
-  // admin.initializeApp({
-  //   credential: admin.credential.cert({
-  //     projectId: credentials.project_id,
-  //     privateKey: credentials.private_key,
-  //     clientEmail: credentials.client_email,
-  //   }),
-  // });
 
   const app = await NestFactory.create(AppModule);
   app.use(express.json());
