@@ -1,10 +1,4 @@
-import {
-  Table,
-  Column,
-  Model,
-  CreatedAt,
-  UpdatedAt,
-} from 'sequelize-typescript';
+import { Table, Column, Model, DataType } from 'sequelize-typescript';
 
 export enum UserType {
   A = 'A',
@@ -28,9 +22,9 @@ export class User extends Model<User> {
   @Column({ allowNull: false, field: 'usertype' })
   userType: UserType;
 
-  @CreatedAt
+  @Column({ allowNull: false, field: 'createdat', defaultValue: DataType.NOW })
   createdat: Date;
 
-  @UpdatedAt
+  @Column({ allowNull: false, field: 'createdat', defaultValue: DataType.NOW })
   updatedat: Date;
 }
