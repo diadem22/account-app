@@ -2,7 +2,6 @@ import dotenv from 'dotenv';
 import { Pool } from 'pg';
 
 dotenv.config();
-// Load environment variables from .env file
 
 const {
   DATABASE_URI,
@@ -22,20 +21,18 @@ const itemsPool = new Pool({
 });
 
 export default {
-  config: {
-    database: {
-      url: DATABASE_URI,
-      name: DATABASE_NAME,
-      DATABASE_SCHEMA,
-      port: Number(DATABASE_PORT),
-      host: DATABASE_HOST,
-      username: DATABASE_USERNAME,
-      password: DATABASE_PASSWORD,
-    },
-    tableNames: {
-      userA: 'userA',
-      userB: 'userB',
-    },
+  database: {
+    url: DATABASE_URI,
+    name: DATABASE_NAME,
+    DATABASE_SCHEMA,
+    port: Number(DATABASE_PORT),
+    host: DATABASE_HOST,
+    username: DATABASE_USERNAME,
+    password: DATABASE_PASSWORD,
+  },
+  tableNames: {
+    userA: 'userA',
+    userB: 'userB',
   },
   itemsPool,
 };
