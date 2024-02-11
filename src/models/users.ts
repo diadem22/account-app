@@ -2,7 +2,6 @@ import {
   Table,
   Column,
   Model,
-  DataType,
   CreatedAt,
   UpdatedAt,
 } from 'sequelize-typescript';
@@ -14,24 +13,24 @@ export enum UserType {
 
 @Table({ tableName: 'users', timestamps: false })
 export class User extends Model<User> {
-  @Column
+  @Column({ allowNull: false })
   uuid: string;
 
-  @Column
+  @Column({ allowNull: false })
   username: string;
 
-  @Column
+  @Column({ allowNull: false })
   email: string;
 
-  @Column
+  @Column({ allowNull: false })
   password: string;
 
-  @Column(DataType.ENUM(UserType.A, UserType.B))
+  @Column({ allowNull: false, field: 'usertype' })
   userType: UserType;
 
   @CreatedAt
-  createdDatetime: Date;
+  createdat: Date;
 
   @UpdatedAt
-  updatedDatetime: Date;
+  updatedat: Date;
 }
