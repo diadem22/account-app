@@ -68,7 +68,11 @@ export class UserController {
       });
       res.status(200).json({
         message: 'User successfully logged in',
-        data: loggedInUser,
+        data: {
+          username: loggedInUser.username,
+          email: loggedInUser.email,
+          user_id: loggedInUser.id,
+        },
       });
     } catch (error) {
       res.status(403).json({
