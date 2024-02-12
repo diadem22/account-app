@@ -34,7 +34,7 @@ export class AccountService {
   }
 
   async updateAccount(
-    user_id: number,
+    account_id: number,
     companyName: string,
     numberOfUsers: number,
     numberOfProducts: number,
@@ -47,7 +47,7 @@ export class AccountService {
           companyName: companyName,
           percentage: (numberOfProducts / numberOfUsers) * 100,
         },
-        { where: { user_id: user_id }, returning: true },
+        { where: { id: account_id }, returning: true },
       );
 
       return updatedAccount;
@@ -57,10 +57,10 @@ export class AccountService {
     }
   }
 
-  async viewAccountData(user_id: number) {
+  async viewAccountData(account_id: number) {
     try {
-      const accountData = await this.accountModel.findAll({
-        where: { user_id },
+      const accountData = await this.accountModel.findOne({
+        where: { id: account_id },
       });
       return accountData;
     } catch (error) {

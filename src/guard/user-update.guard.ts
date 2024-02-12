@@ -8,7 +8,7 @@ import admin from 'firebase-admin';
 import { Sequelize } from 'sequelize-typescript';
 
 @Injectable()
-export class UserViewGuard implements CanActivate {
+export class UserUpdateGuard implements CanActivate {
   constructor(private sequelize: Sequelize) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest();
@@ -21,13 +21,18 @@ export class UserViewGuard implements CanActivate {
         attributes: ['userType', 'id'],
         where: { uuid: decodedToken.uid },
       });
+
       const account = await this.sequelize.models.Account.findOne({
-        attributes: ['id'],
-        where: { user_id: user.dataValues.id },
+        attributes: ['user_id'],
+        where: { id: req.params.account_id },
       });
-      if (user.dataValues.userType === 'B') {
-        return true;
-      } else if (account.dataValues.id == req.params.account_id) {
+
+      console.log(account);
+
+      if (
+        user.dataValues.userType == 'A' &&
+        user.dataValues.id == account.dataValues.user_id
+      ) {
         return true;
       }
       throw new UnauthorizedException('User not authorized');

@@ -23,6 +23,7 @@ import {
   CreateAccountValidatorPipe,
   UpdateAccountValidatorPipe,
 } from '../joi/joi-validation.pipe';
+import { UserUpdateGuard } from 'src/guard/user-update.guard';
 
 @Controller({ path: 'account' })
 export class AccountController {
@@ -57,17 +58,17 @@ export class AccountController {
     }
   }
 
-  @Put('update/:user_id')
-  @UseGuards(AuthGuard, UserAGuard)
+  @Put('update/:account_id')
+  @UseGuards(AuthGuard, UserUpdateGuard)
   async updateAccount(
-    @Param('user_id') user_id: number,
+    @Param('account_id') account_id: number,
     @Body(new UpdateAccountValidatorPipe()) updateAccountDto: AccountDto,
     @Res() res: Response,
   ) {
     const { companyName, numberOfUsers, numberOfProducts } = updateAccountDto;
     try {
       const account = await this.accountService.updateAccount(
-        user_id,
+        account_id,
         companyName,
         numberOfUsers,
         numberOfProducts,
@@ -84,14 +85,14 @@ export class AccountController {
     }
   }
 
-  @Get('view-data/:user_id')
+  @Get('view-data/:account_id')
   @UseGuards(AuthGuard, UserViewGuard)
   async viewAccountData(
-    @Param('user_id') user_id: number,
+    @Param('account_id') account_id: number,
     @Res() res: Response,
   ) {
     try {
-      const account = await this.accountService.viewAccountData(user_id);
+      const account = await this.accountService.viewAccountData(account_id);
 
       res.status(200).json({
         message: 'Account Data successfully retrieved',
