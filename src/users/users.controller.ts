@@ -34,7 +34,7 @@ export class UserController {
     } catch (error) {
       res.status(400).json({
         message: 'User not successfully created',
-        error: error.message,
+        error: 'Check that all required fields are imputed',
       });
     }
   }

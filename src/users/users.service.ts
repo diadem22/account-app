@@ -26,7 +26,7 @@ export class UserService {
       });
       return user;
     } catch (ex) {
-      console.error('Error creating user:', ex);
+      console.error('Error creating user: ', ex);
       throw ex;
     }
   }
