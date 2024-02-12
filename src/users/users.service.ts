@@ -34,7 +34,7 @@ export class UserService {
   async login(email: string, password: string) {
     try {
       const result = await this.userModel.findOne({
-        attributes: ['username', 'email', 'uuid'],
+        attributes: ['username', 'email', 'id'],
         where: { email, password },
       });
       return result;
