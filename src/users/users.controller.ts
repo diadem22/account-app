@@ -13,12 +13,12 @@ export class UserController {
   async register(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
     const { username, password, email, userType } = createUserDto;
 
-    const userResponse = await admin.auth().createUser({
-      email: email,
-      password: password,
-    });
-
     try {
+      const userResponse = await admin.auth().createUser({
+        email: email,
+        password: password,
+      });
+
       const user = await this.userService.createUser(
         username,
         password,
@@ -32,10 +32,17 @@ export class UserController {
         data: user,
       });
     } catch (error) {
-      res.status(400).json({
-        message: 'User not successfully created',
-        error: 'Check that all required fields are imputed',
-      });
+      if (error.code === 400) {
+        res.status(400).json({
+          message: 'User not created',
+          error: 'Check that all field are passed in',
+        });
+      } else {
+        res.status(500).json({
+          message: 'Internal server error',
+          error: error.message,
+        });
+      }
     }
   }
 
