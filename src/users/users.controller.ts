@@ -38,7 +38,7 @@ export class UserController {
           error: 'Check that all field are passed in',
         });
       } else {
-        res.status(500).json({
+        res.status(403).json({
           message: error.message,
         });
       }
