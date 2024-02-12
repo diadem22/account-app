@@ -10,7 +10,6 @@ import {
   UseInterceptors,
   UploadedFile,
   BadRequestException,
-  UsePipes,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { AccountService } from './account.service';
@@ -20,24 +19,23 @@ import { AuthGuard } from 'src/guard/auth.guard';
 import { UserAGuard } from 'src/guard/usera.guard';
 import { UserViewGuard } from 'src/guard/user-view.guard';
 import { UserBGuard } from 'src/guard/userb.guide';
-import { JoiValidationPipe } from '../joi/joi-validation.pipe';
 import {
-  createAccountSchema,
-  updateAccountSchema,
-} from '../schemas/account-schema';
+  CreateAccountValidatorPipe,
+  UpdateAccountValidatorPipe,
+} from '../joi/joi-validation.pipe';
 
 @Controller({ path: 'account' })
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
 
   @Post('create/:user_id')
-  @UsePipes(new JoiValidationPipe(createAccountSchema))
   @UseGuards(AuthGuard, UserAGuard)
   async createAccount(
     @Param('user_id') user_id: number,
-    @Body() createAccountDto: AccountDto,
+    @Body(new CreateAccountValidatorPipe()) createAccountDto: AccountDto,
     @Res() res: Response,
   ) {
+    console.log(createAccountDto);
     const { companyName, numberOfUsers, numberOfProducts } = createAccountDto;
     try {
       const account = await this.accountService.createAccount(
@@ -60,11 +58,10 @@ export class AccountController {
   }
 
   @Put('update/:user_id')
-  @UsePipes(new JoiValidationPipe(updateAccountSchema))
   @UseGuards(AuthGuard, UserAGuard)
   async updateAccount(
     @Param('user_id') user_id: number,
-    @Body() updateAccountDto: AccountDto,
+    @Body(new UpdateAccountValidatorPipe()) updateAccountDto: AccountDto,
     @Res() res: Response,
   ) {
     const { companyName, numberOfUsers, numberOfProducts } = updateAccountDto;

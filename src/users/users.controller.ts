@@ -3,7 +3,7 @@ import * as admin from 'firebase-admin';
 import { UserService } from './users.service';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { JoiValidationPipe } from '../joi/joi-validation.pipe';
+import { UserValidationPipe } from '../joi/joi-validation.pipe';
 import { createUserSchema, loginSchema } from '../schemas/user.schema';
 import { Response } from 'express';
 
@@ -12,7 +12,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('register')
-  @UsePipes(new JoiValidationPipe(createUserSchema))
+  @UsePipes(new UserValidationPipe(createUserSchema))
   async register(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
     const { username, password, email, userType } = createUserDto;
 
@@ -43,7 +43,7 @@ export class UserController {
   }
 
   @Post('login')
-  @UsePipes(new JoiValidationPipe(loginSchema))
+  @UsePipes(new UserValidationPipe(loginSchema))
   async login(@Body() { email, password }, @Res() res: Response) {
     try {
       const loggedInUser = await this.userService.login(email, password);
@@ -61,6 +61,7 @@ export class UserController {
         password,
       );
       const token = await userCredential.user.getIdToken();
+
       res.cookie('token', token, {
         httpOnly: true,
         secure: true,

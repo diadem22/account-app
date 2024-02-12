@@ -19,13 +19,14 @@ export class AuthGuard implements CanActivate {
     try {
       const decodedToken = await admin.auth().verifyIdToken(token);
 
+      console.log(decodedToken);
+
       if (decodedToken) {
         return true;
-      } else {
-        throw new UnauthorizedException('User not authorized');
       }
-    } catch (error) {
       throw new UnauthorizedException('User not authorized');
+    } catch (error) {
+      console.log(error);
     }
   }
 }

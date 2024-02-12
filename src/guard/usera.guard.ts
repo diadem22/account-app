@@ -22,11 +22,17 @@ export class UserAGuard implements CanActivate {
         where: { uuid: decodedToken.uid },
       });
 
+      console.log(
+        user.dataValues.userType == 'A' &&
+          user.dataValues.id == req.params.user_id,
+      );
+
       if (
         user.dataValues.userType == 'A' &&
         user.dataValues.id == req.params.user_id
-      )
+      ) {
         return true;
+      }
       throw new UnauthorizedException('User not authorized');
     } catch (error) {
       console.log(error);
