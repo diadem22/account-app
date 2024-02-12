@@ -1,8 +1,10 @@
-import { Controller, Post, Body, Res } from '@nestjs/common';
+import { Controller, Post, Body, Res, UsePipes } from '@nestjs/common';
 import * as admin from 'firebase-admin';
 import { UserService } from './users.service';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { JoiValidationPipe } from '../joi/joi-validation.pipe';
+import { createUserSchema, loginSchema } from '../schemas/user.schema';
 import { Response } from 'express';
 
 @Controller({ path: 'user' })
@@ -10,6 +12,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('register')
+  @UsePipes(new JoiValidationPipe(createUserSchema))
   async register(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
     const { username, password, email, userType } = createUserDto;
 
@@ -32,23 +35,25 @@ export class UserController {
         data: user,
       });
     } catch (error) {
-      if (error.code === 400) {
-        res.status(400).json({
-          message: 'User not created',
-          error: 'Check that all field are passed in',
-        });
-      } else {
-        res.status(403).json({
-          message: error.message,
-        });
-      }
+      res.status(400).json({
+        message: 'User not created',
+        error: error.message,
+      });
     }
   }
 
   @Post('login')
+  @UsePipes(new JoiValidationPipe(loginSchema))
   async login(@Body() { email, password }, @Res() res: Response) {
     try {
       const loggedInUser = await this.userService.login(email, password);
+
+      if (!loggedInUser || loggedInUser == null) {
+        res.status(400).json({
+          message: 'Login failed',
+          error: 'User not found',
+        });
+      }
       const auth = getAuth();
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -66,7 +71,7 @@ export class UserController {
         data: loggedInUser,
       });
     } catch (error) {
-      res.status(400).json({
+      res.status(403).json({
         message: 'Login failed',
         error: error.message,
       });

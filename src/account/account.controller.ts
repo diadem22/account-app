@@ -9,6 +9,8 @@ import {
   Res,
   UseInterceptors,
   UploadedFile,
+  BadRequestException,
+  UsePipes,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { AccountService } from './account.service';
@@ -18,12 +20,15 @@ import { AuthGuard } from 'src/guard/auth.guard';
 import { UserAGuard } from 'src/guard/usera.guard';
 import { UserViewGuard } from 'src/guard/user-view.guard';
 import { UserBGuard } from 'src/guard/userb.guide';
+import { JoiValidationPipe } from '../joi/joi-validation.pipe';
+import { accountSchema } from '../schemas/account-schema';
 
 @Controller({ path: 'account' })
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
 
   @Post('create')
+  @UsePipes(new JoiValidationPipe(accountSchema))
   @UseGuards(AuthGuard, UserAGuard)
   async createAccount(
     @Body()
@@ -53,6 +58,7 @@ export class AccountController {
   }
 
   @Put('update-account')
+  @UsePipes(new JoiValidationPipe(accountSchema))
   @UseGuards(AuthGuard, UserAGuard)
   async updateAccount(
     @Body() updateAccountDto: CreateAccountDto,
@@ -108,11 +114,13 @@ export class AccountController {
     @Param('account_id') account_id: number,
     @Res() res: Response,
   ) {
-    const image = file.buffer;
+    if (!file || !file.buffer || !file.mimetype.startsWith('image/')) {
+      throw new BadRequestException('Only image files are allowed.');
+    }
     try {
       const account = await this.accountService.uploadImage(
         account_id,
-        image,
+        file.buffer,
         file.originalname,
       );
       res.status(200).json({
