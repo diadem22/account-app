@@ -2,7 +2,7 @@
 
 import { IsInt, IsString, IsNotEmpty, Min } from 'class-validator';
 
-export class CreateAccountDto {
+export class AccountDto {
   @IsInt()
   @Min(1)
   user_id: number;

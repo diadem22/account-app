@@ -38,7 +38,7 @@ export class Account extends Model<Account> {
   @Column({ allowNull: false, field: 'createdat', defaultValue: DataType.NOW })
   createdAt: Date;
 
-  @Column({ allowNull: false, field: 'updatedat', defaultValue: DataType.NOW })
+  @Column({ allowNull: true, field: 'updatedat', defaultValue: DataType.NOW })
   updatedAt: Date;
 
   @BelongsTo(() => User)

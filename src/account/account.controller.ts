@@ -14,29 +14,31 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { AccountService } from './account.service';
-import { CreateAccountDto } from '../dto/account.dto';
+import { AccountDto } from '../dto/account.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from 'src/guard/auth.guard';
 import { UserAGuard } from 'src/guard/usera.guard';
 import { UserViewGuard } from 'src/guard/user-view.guard';
 import { UserBGuard } from 'src/guard/userb.guide';
 import { JoiValidationPipe } from '../joi/joi-validation.pipe';
-import { accountSchema } from '../schemas/account-schema';
+import {
+  createAccountSchema,
+  updateAccountSchema,
+} from '../schemas/account-schema';
 
 @Controller({ path: 'account' })
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
 
-  @Post('create')
-  @UsePipes(new JoiValidationPipe(accountSchema))
+  @Post('create/:user_id')
+  @UsePipes(new JoiValidationPipe(createAccountSchema))
   @UseGuards(AuthGuard, UserAGuard)
   async createAccount(
-    @Body()
-    createAccountDto: CreateAccountDto,
+    @Param('user_id') user_id: number,
+    @Body() createAccountDto: AccountDto,
     @Res() res: Response,
   ) {
-    const { user_id, companyName, numberOfUsers, numberOfProducts } =
-      createAccountDto;
+    const { companyName, numberOfUsers, numberOfProducts } = createAccountDto;
     try {
       const account = await this.accountService.createAccount(
         user_id,
@@ -57,15 +59,15 @@ export class AccountController {
     }
   }
 
-  @Put('update-account')
-  @UsePipes(new JoiValidationPipe(accountSchema))
+  @Put('update/:user_id')
+  @UsePipes(new JoiValidationPipe(updateAccountSchema))
   @UseGuards(AuthGuard, UserAGuard)
   async updateAccount(
-    @Body() updateAccountDto: CreateAccountDto,
+    @Param('user_id') user_id: number,
+    @Body() updateAccountDto: AccountDto,
     @Res() res: Response,
   ) {
-    const { user_id, companyName, numberOfUsers, numberOfProducts } =
-      updateAccountDto;
+    const { companyName, numberOfUsers, numberOfProducts } = updateAccountDto;
     try {
       const account = await this.accountService.updateAccount(
         user_id,
