@@ -26,7 +26,7 @@ export class UserBGuard implements CanActivate {
       }
       throw new UnauthorizedException('User not authorized');
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 }

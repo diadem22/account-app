@@ -15,15 +15,15 @@ import { Response } from 'express';
 import { AccountService } from './account.service';
 import { AccountDto } from '../dto/account.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { AuthGuard } from 'src/guard/auth.guard';
-import { UserAGuard } from 'src/guard/usera.guard';
-import { UserViewGuard } from 'src/guard/user-view.guard';
-import { UserBGuard } from 'src/guard/userb.guide';
+import { AuthGuard } from '../guard/auth.guard';
+import { UserAGuard } from '../guard/usera.guard';
+import { UserViewGuard } from '../guard/user-view.guard';
+import { UserBGuard } from '../guard/userb.guide';
 import {
   CreateAccountValidatorPipe,
   UpdateAccountValidatorPipe,
 } from '../joi/joi-validation.pipe';
-import { UserUpdateGuard } from 'src/guard/user-update.guard';
+import { UserUpdateGuard } from '../guard/user-update.guard';
 
 @Controller({ path: 'account' })
 export class AccountController {
@@ -36,7 +36,6 @@ export class AccountController {
     @Body(new CreateAccountValidatorPipe()) createAccountDto: AccountDto,
     @Res() res: Response,
   ) {
-    console.log(createAccountDto);
     const { companyName, numberOfUsers, numberOfProducts } = createAccountDto;
     try {
       const account = await this.accountService.createAccount(

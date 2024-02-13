@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Account } from 'src/models/account';
+import { Account } from '../models/account';
 
 @Injectable()
 export class AccountService {
@@ -49,7 +49,6 @@ export class AccountService {
         },
         { where: { id: account_id }, returning: true },
       );
-
       return updatedAccount;
     } catch (error) {
       console.error('Error updating accounting:', error);
@@ -60,6 +59,15 @@ export class AccountService {
   async viewAccountData(account_id: number) {
     try {
       const accountData = await this.accountModel.findOne({
+        attributes: [
+          'numberOfProducts',
+          'numberOfUsers',
+          'numberOfUsers',
+          'percentage',
+          'id',
+          'imageName',
+          'user_id',
+        ],
         where: { id: account_id },
       });
       return accountData;
@@ -71,15 +79,13 @@ export class AccountService {
 
   async uploadImage(account_id, image, imageName) {
     try {
-      console.log(imageName);
       const upload = await this.accountModel.update(
         {
           image: image,
           imageName: imageName,
         },
-        { where: { id: account_id }, returning: true },
+        { where: { id: account_id } },
       );
-      console.log(upload[1]);
       return upload;
     } catch (error) {
       console.error('Error uploading image:', error);

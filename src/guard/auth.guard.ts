@@ -5,7 +5,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import admin from 'firebase-admin';
-// import { Sequelize } from 'sequelize-typescript';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -19,14 +18,12 @@ export class AuthGuard implements CanActivate {
     try {
       const decodedToken = await admin.auth().verifyIdToken(token);
 
-      console.log(decodedToken);
-
       if (decodedToken) {
         return true;
       }
       throw new UnauthorizedException('User not authorized');
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 }

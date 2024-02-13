@@ -1,10 +1,10 @@
 import { PipeTransform, Injectable, BadRequestException } from '@nestjs/common';
 import * as Joi from 'joi';
-import { AccountDto } from 'src/dto/account.dto';
+import { AccountDto } from '../dto/account.dto';
 import {
   createAccountSchema,
   updateAccountSchema,
-} from 'src/schemas/account-schema';
+} from '../schemas/account-schema';
 
 @Injectable()
 export class UserValidationPipe<Dto> implements PipeTransform<Dto> {

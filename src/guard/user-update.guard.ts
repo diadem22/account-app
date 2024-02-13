@@ -27,8 +27,6 @@ export class UserUpdateGuard implements CanActivate {
         where: { id: req.params.account_id },
       });
 
-      console.log(account);
-
       if (
         user.dataValues.userType == 'A' &&
         user.dataValues.id == account.dataValues.user_id
@@ -37,7 +35,7 @@ export class UserUpdateGuard implements CanActivate {
       }
       throw new UnauthorizedException('User not authorized');
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 }

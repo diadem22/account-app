@@ -16,8 +16,6 @@ async function bootstrap() {
     return;
   }
 
-  // admin.initializeApp();
-
   firebase_admin.initializeApp({
     credential: firebase_admin.credential.applicationDefault(),
   });

@@ -30,7 +30,7 @@ export class UserAGuard implements CanActivate {
       }
       throw new UnauthorizedException('User not authorized');
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 }
