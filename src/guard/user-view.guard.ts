@@ -23,7 +23,7 @@ export class UserViewGuard implements CanActivate {
       });
       const account = await this.sequelize.models.Account.findOne({
         attributes: ['id'],
-        where: { user_id: user.dataValues.id },
+        where: { id: req.params.account_id },
       });
       if (user.dataValues.userType === 'B') {
         return true;
